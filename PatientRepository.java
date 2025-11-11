@@ -1,46 +1,15 @@
-// PatientRepository.java
-// Smart Clinic Management System
-// Author: <Your Name>
-// Description: Handles CRUD operations for patients.
+package com.smartclinic.repository;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.smartclinic.model.Patient;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public class PatientRepository {
-    private List<Patient> patients = new ArrayList<>();
+@Repository
+public interface PatientRepository extends JpaRepository<Patient, Long> {
 
-    // Add new patient
-    public void addPatient(Patient patient) {
-        patients.add(patient);
-        System.out.println("Patient added successfully: " + patient.getName());
-    }
+    // ✅ Retrieve a patient by email address
+    Patient findByEmail(String email);
 
-    // View all patients
-    public void viewAllPatients() {
-        System.out.println("\n--- Patient List ---");
-        for (Patient p : patients) {
-            p.displayPatientInfo();
-            System.out.println("----------------------");
-        }
-    }
-
-    // Find patient by ID
-    public Patient findPatientById(int id) {
-        for (Patient p : patients) {
-            if (p.getPatientId() == id) {
-                return p;
-            }
-        }
-        System.out.println("No patient found with ID: " + id);
-        return null;
-    }
-
-    // Remove patient
-    public void removePatient(int id) {
-        Patient toRemove = findPatientById(id);
-        if (toRemove != null) {
-            patients.remove(toRemove);
-            System.out.println("Patient removed successfully!");
-        }
-    }
+    // ✅ Retrieve a patient by phone number
+    Patient findByPhoneNumber(String phoneNumber);
 }
