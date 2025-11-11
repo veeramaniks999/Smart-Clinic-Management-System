@@ -1,46 +1,46 @@
-// AppointmentService.java
-// Smart Clinic Management System
-// Author: <Your Name>
-// Description: Handles appointment-related operations and logic.
+package com.smartclinic.service;
 
-import java.util.ArrayList;
+import com.smartclinic.model.Appointment;
+import com.smartclinic.repository.AppointmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Optional;
 
+@Service
 public class AppointmentService {
-    private List<Appointment> appointments = new ArrayList<>();
 
-    // Add appointment
-    public void scheduleAppointment(Appointment appointment) {
-        appointments.add(appointment);
-        System.out.println("Appointment scheduled successfully for Doctor ID: " + appointment.getDoctorId());
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    // ✅ Book or schedule a new appointment
+    public Appointment bookAppointment(Appointment appointment) {
+        return appointmentRepository.save(appointment);
     }
 
-    // View all appointments
-    public void viewAllAppointments() {
-        System.out.println("\n--- All Appointments ---");
-        for (Appointment appt : appointments) {
-            appt.displayAppointmentDetails();
-            System.out.println("----------------------");
-        }
+    // ✅ View all appointments
+    public List<Appointment> getAllAppointments() {
+        return appointmentRepository.findAll();
     }
 
-    // Find appointment by ID
-    public Appointment findAppointmentById(int id) {
-        for (Appointment appt : appointments) {
-            if (appt.getAppointmentId() == id) {
-                return appt;
-            }
-        }
-        System.out.println("No appointment found with ID: " + id);
-        return null;
+    // ✅ Find an appointment by ID
+    public Optional<Appointment> getAppointmentById(Long id) {
+        return appointmentRepository.findById(id);
     }
 
-    // Cancel appointment
-    public void cancelAppointment(int id) {
-        Appointment appt = findAppointmentById(id);
-        if (appt != null) {
-            appt.setStatus("Cancelled");
-            System.out.println("Appointment cancelled successfully!");
-        }
+    // ✅ Cancel an appointment
+    public void cancelAppointment(Long id) {
+        appointmentRepository.deleteById(id);
+    }
+
+    // ✅ View appointments by doctor ID
+    public List<Appointment> getAppointmentsByDoctorId(Long doctorId) {
+        return appointmentRepository.findByDoctorId(doctorId);
+    }
+
+    // ✅ View appointments by patient ID
+    public List<Appointment> getAppointmentsByPatientId(Long patientId) {
+        return appointmentRepository.findByPatientId(patientId);
     }
 }
