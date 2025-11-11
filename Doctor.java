@@ -1,35 +1,39 @@
-// Doctor.java
-// Smart Clinic Management System
-// Author: <Your Name>
-// Description: Represents a Doctor entity with attributes and methods.
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ElementCollection;
+import java.util.List;
 
+@Entity
 public class Doctor {
-    private int doctorId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
     private String specialization;
-    private String email;
-    private String phone;
 
-    // Default constructor
-    public Doctor() {
-    }
+    @ElementCollection
+    private List<String> availableTimes;
 
-    // Parameterized constructor
-    public Doctor(int doctorId, String name, String specialization, String email, String phone) {
-        this.doctorId = doctorId;
+    // Constructors
+    public Doctor() { }
+
+    public Doctor(String name, String specialization, List<String> availableTimes) {
         this.name = name;
         this.specialization = specialization;
-        this.email = email;
-        this.phone = phone;
+        this.availableTimes = availableTimes;
     }
 
     // Getters and Setters
-    public int getDoctorId() {
-        return doctorId;
+    public Long getId() {
+        return id;
     }
 
-    public void setDoctorId(int doctorId) {
-        this.doctorId = doctorId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -48,28 +52,11 @@ public class Doctor {
         this.specialization = specialization;
     }
 
-    public String getEmail() {
-        return email;
+    public List<String> getAvailableTimes() {
+        return availableTimes;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    // Display doctor details
-    public void displayDoctorInfo() {
-        System.out.println("Doctor ID: " + doctorId);
-        System.out.println("Name: " + name);
-        System.out.println("Specialization: " + specialization);
-        System.out.println("Email: " + email);
-        System.out.println("Phone: " + phone);
+    public void setAvailableTimes(List<String> availableTimes) {
+        this.availableTimes = availableTimes;
     }
 }
