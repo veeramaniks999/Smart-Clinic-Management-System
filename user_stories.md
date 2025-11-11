@@ -12,3 +12,19 @@ As a Doctor, I want to view my daily appointments so that I can manage my schedu
 
 **Priority:** High  
 **Story Points:** 3
+
+
+### Update Patient Records
+As a Doctor, I want to update patient medical records so that accurate information is maintained.
+
+**Acceptance Criteria:**
+- [ ] Doctor can add diagnosis, prescription, and notes
+- [ ] Records are saved and retrievable
+- [ ] Only authorized doctor can update records
+
+**Priority:** High  
+**Story Points:** 3
+
+
+
+
