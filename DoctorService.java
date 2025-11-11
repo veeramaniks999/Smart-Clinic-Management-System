@@ -1,51 +1,60 @@
-// DoctorService.java
-// Smart Clinic Management System
-// Author: <Your Name>
-// Description: Provides business logic for managing doctors.
+package com.smartclinic.service;
 
+import com.smartclinic.model.Doctor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class DoctorService {
-    private List<Doctor> doctorList = new ArrayList<>();
 
-    // Add doctor
+    private final List<Doctor> doctors = new ArrayList<>();
+
+    // ✅ Add a new doctor
     public void addDoctor(Doctor doctor) {
-        doctorList.add(doctor);
-        System.out.println("Doctor added successfully: " + doctor.getName());
+        doctors.add(doctor);
     }
 
-    // Get all doctors
-    public List<Doctor> getAllDoctors() {
-        return doctorList;
+    // ✅ View all doctors
+    public List<Doctor> viewAllDoctors() {
+        return doctors;
     }
 
-    // Find doctor by ID
-    public Doctor getDoctorById(int id) {
-        for (Doctor doctor : doctorList) {
-            if (doctor.getDoctorId() == id) {
+    // ✅ Find a doctor by ID
+    public Doctor findDoctorById(Long id) {
+        for (Doctor doctor : doctors) {
+            if (doctor.getId().equals(id)) {
                 return doctor;
             }
         }
-        System.out.println("Doctor not found with ID: " + id);
         return null;
     }
 
-    // Update doctor details
-    public void updateDoctorEmail(int id, String newEmail) {
-        Doctor doctor = getDoctorById(id);
-        if (doctor != null) {
-            doctor.setEmail(newEmail);
-            System.out.println("Doctor email updated successfully!");
-        }
+    // ✅ Delete a doctor by ID
+    public boolean deleteDoctor(Long id) {
+        return doctors.removeIf(doctor -> doctor.getId().equals(id));
     }
 
-    // Delete doctor
-    public void deleteDoctor(int id) {
-        Doctor doctor = getDoctorById(id);
-        if (doctor != null) {
-            doctorList.remove(doctor);
-            System.out.println("Doctor deleted successfully!");
+    // ✅ Retrieve doctor's availability by ID and date
+    public List<String> getDoctorAvailability(Long doctorId, LocalDate date) {
+        Doctor doctor = findDoctorById(doctorId);
+        if (doctor != null && doctor.getAvailableTimes() != null) {
+            // For simplicity, assume the same availability applies to any date
+            return doctor.getAvailableTimes();
         }
+        return new ArrayList<>();
+    }
+
+    // ✅ Validate login credentials
+    public Doctor validateDoctorLogin(String email, String password) {
+        for (Doctor doctor : doctors) {
+            if (doctor.getEmail().equalsIgnoreCase(email)
+                    && doctor.getPassword().equals(password)) {
+                return doctor;
+            }
+        }
+        return null; // Invalid credentials
     }
 }
