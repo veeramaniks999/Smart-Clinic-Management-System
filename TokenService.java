@@ -1,37 +1,57 @@
-// TokenService.java
-// Smart Clinic Management System
-// Author: <Your Name>
-// Description: Handles token generation and validation (mock service).
+package com.smartclinic.service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Service;
 
+import java.security.Key;
+import java.util.Date;
+
+@Service
 public class TokenService {
-    private Map<String, String> tokenStore = new HashMap<>();
 
-    // Generate token for a username
-    public String generateToken(String username) {
-        String token = UUID.randomUUID().toString();
-        tokenStore.put(token, username);
-        System.out.println("Generated token for user: " + username);
-        return token;
+    // ✅ Secret key for signing the JWT (should be kept private)
+    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+    // ✅ Token validity: 1 hour (in milliseconds)
+    private static final long EXPIRATION_TIME = 3600000; // 1 hour
+
+    /**
+     * Generates a JWT token for the given email address.
+     *
+     * @param email the user's email address
+     * @return the generated JWT token
+     */
+    public String generateToken(String email) {
+        long currentTimeMillis = System.currentTimeMillis();
+        Date issuedAt = new Date(currentTimeMillis);
+        Date expiration = new Date(currentTimeMillis + EXPIRATION_TIME);
+
+        // ✅ Build the JWT using Jwts.builder()
+        return Jwts.builder()
+                .setSubject(email) // Include email in the token
+                .setIssuedAt(issuedAt) // Token issue time
+                .setExpiration(expiration) // Token expiry time
+                .signWith(SECRET_KEY) // Sign with secret key
+                .compact();
     }
 
-    // Validate token
+    /**
+     * Validates the token (optional helper method).
+     *
+     * @param token the JWT token to validate
+     * @return true if valid, false otherwise
+     */
     public boolean validateToken(String token) {
-        boolean valid = tokenStore.containsKey(token);
-        if (valid) {
-            System.out.println("Token is valid for user: " + tokenStore.get(token));
-        } else {
-            System.out.println("Invalid or expired token.");
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        return valid;
-    }
-
-    // Revoke token
-    public void revokeToken(String token) {
-        tokenStore.remove(token);
-        System.out.println("Token revoked successfully.");
     }
 }
