@@ -1,46 +1,51 @@
-// DoctorController.java
-// Smart Clinic Management System
-// Author: <Your Name>
-// Description: Controls doctor-related operations like add, view, and remove.
+package com.smartclinic.controller;
 
-import java.util.ArrayList;
+import com.smartclinic.model.Doctor;
+import com.smartclinic.service.DoctorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/doctors")
 public class DoctorController {
-    private List<Doctor> doctors = new ArrayList<>();
 
-    // Add a new doctor
-    public void addDoctor(Doctor doctor) {
-        doctors.add(doctor);
-        System.out.println("Doctor added successfully: " + doctor.getName());
+    @Autowired
+    private DoctorService doctorService;
+
+    // ✅ Get all doctors
+    @GetMapping
+    public List<Doctor> getAllDoctors() {
+        return doctorService.getAllDoctors();
     }
 
-    // View all doctors
-    public void viewDoctors() {
-        System.out.println("\n--- List of Doctors ---");
-        for (Doctor doctor : doctors) {
-            doctor.displayDoctorInfo();
-            System.out.println("----------------------");
-        }
+    // ✅ Get doctor by ID
+    @GetMapping("/{id}")
+    public Doctor getDoctorById(@PathVariable Long id) {
+        return doctorService.getDoctorById(id);
     }
 
-    // Find a doctor by ID
-    public Doctor findDoctorById(int id) {
-        for (Doctor doctor : doctors) {
-            if (doctor.getDoctorId() == id) {
-                return doctor;
-            }
-        }
-        System.out.println("Doctor not found with ID: " + id);
-        return null;
+    // ✅ Add a new doctor
+    @PostMapping
+    public Doctor addDoctor(@RequestBody Doctor doctor) {
+        return doctorService.addDoctor(doctor);
     }
 
-    // Remove doctor by ID
-    public void removeDoctor(int id) {
-        Doctor toRemove = findDoctorById(id);
-        if (toRemove != null) {
-            doctors.remove(toRemove);
-            System.out.println("Doctor removed successfully.");
+    // ✅ Retrieve doctor availability by ID and date
+    @GetMapping("/{id}/availability")
+    public List<String> getDoctorAvailability(
+            @PathVariable Long id,
+            @RequestParam("date") String date,
+            @RequestHeader(value = "Authorization", required = false) String token
+    ) {
+        // 🩺 (Simulated token check - optional)
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("Unauthorized access: missing token");
         }
+
+        LocalDate localDate = LocalDate.parse(date);
+        return doctorService.getAvailableTimesByDate(id, localDate);
     }
 }
