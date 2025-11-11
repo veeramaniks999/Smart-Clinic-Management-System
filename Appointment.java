@@ -1,89 +1,59 @@
-// Appointment.java
-// Smart Clinic Management System
-// Author: <Your Name>
-// Description: Represents an appointment between a doctor and a patient.
+package com.smartclinic.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Entity
 public class Appointment {
-    private int appointmentId;
-    private int doctorId;
-    private int patientId;
-    private LocalDate date;
-    private LocalTime time;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;  // ✅ Primary key
+
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")  // ✅ Foreign key reference to Doctor
+    private Doctor doctor;
+
+    @ManyToOne
+    @JoinColumn(name = "patient_id") // ✅ Foreign key reference to Patient
+    private Patient patient;
+
+    private LocalDate appointmentDate;
+    private LocalTime appointmentTime;
     private String status;
 
-    // Default constructor
-    public Appointment() {
-    }
+    // Constructors
+    public Appointment() {}
 
-    // Parameterized constructor
-    public Appointment(int appointmentId, int doctorId, int patientId, LocalDate date, LocalTime time, String status) {
-        this.appointmentId = appointmentId;
-        this.doctorId = doctorId;
-        this.patientId = patientId;
-        this.date = date;
-        this.time = time;
+    public Appointment(Doctor doctor, Patient patient, LocalDate appointmentDate, LocalTime appointmentTime, String status) {
+        this.doctor = doctor;
+        this.patient = patient;
+        this.appointmentDate = appointmentDate;
+        this.appointmentTime = appointmentTime;
         this.status = status;
     }
 
     // Getters and Setters
-    public int getAppointmentId() {
-        return appointmentId;
+    public Long getId() {
+        return id;
     }
 
-    public void setAppointmentId(int appointmentId) {
-        this.appointmentId = appointmentId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public int getDoctorId() {
-        return doctorId;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public void setDoctorId(int doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 
-    public int getPatientId() {
-        return patientId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalTime time) {
-        this.time = time;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    // Display appointment details
-    public void displayAppointmentDetails() {
-        System.out.println("Appointment ID: " + appointmentId);
-        System.out.println("Doctor ID: " + doctorId);
-        System.out.println("Patient ID: " + patientId);
-        System.out.println("Date: " + date);
-        System.out.println("Time: " + time);
-        System.out.println("Status: " + status);
-    }
-}
+    public void setPatient(Patient patient) {
+        this.patient = pat
