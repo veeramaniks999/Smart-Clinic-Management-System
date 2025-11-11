@@ -1,21 +1,80 @@
-# ---------- Stage 1 : Build ----------
-FROM maven:3.9.6-eclipse-temurin-17 AS build
-WORKDIR /app
+package com.smartclinic.model;
 
-# Copy pom.xml and source code, then build
-COPY pom.xml .
-COPY src ./src
-RUN mvn -B -DskipTests clean package
+import jakarta.persistence.*;
+import java.util.List;
 
-# ---------- Stage 2 : Runtime ----------
-FROM eclipse-temurin:17-jre
-WORKDIR /app
+@Entity
+public class Doctor {
 
-# Copy the built JAR from the first stage
-COPY --from=build /app/target/*.jar /app/app.jar
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;  // ✅ primary key of type Long
 
-# Expose default Spring Boot port
-EXPOSE 8080
+    private String name;
+    private String specialization;
+    private String email;
+    private String phoneNumber;
 
-# Run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+    @ElementCollection
+    private List<String> availableTimes;  // ✅ list of available times
+
+    // Constructors
+    public Doctor() {}
+
+    public Doctor(String name, String specialization, String email, String phoneNumber, List<String> availableTimes) {
+        this.name = name;
+        this.specialization = specialization;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.availableTimes = availableTimes;
+    }
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public List<String> getAvailableTimes() {
+        return availableTimes;
+    }
+
+    public void setAvailableTimes(List<String> availableTimes) {
+        this.availableTimes = availableTimes;
+    }
+}
